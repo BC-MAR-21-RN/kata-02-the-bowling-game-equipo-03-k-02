@@ -1,17 +1,26 @@
-import { Frame } from "./Frame.js";
-import { pinsNumber } from "./globals.js";
+let Frame = require("./Frame.js");
+let { pinsNumber } = require("./globals.js");
 
-export default class Roll {
+module.exports = class Roll {
   random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  static roll() {
-    let frame = new Frame(random(0, pinsNumber));
+  static rollOne(rollNumber) {
+    return new Frame(random(0, pinsNumber), rollNumber);
+  }
+
+  static rollSecondShot(frame) {
+    frame.setSecondRolledPins(random(0, pinsNumber - frame.firstRolledPins));
+  }
+
+  static rollFrame(rollNumber) {
+    let frame = this.rollOne(rollNumber);
+
     if (!frame.isStrike()) {
-      frame.setSecondRolledPins(random(0, pinsNumber - frame.firstRolledPins));
+      this.rollSecondShot(frame);
     }
 
     return frame;
   }
-}
+};

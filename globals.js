@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   totalRolls: 10,
   pinsNumber: 10,
   rollTypes: {

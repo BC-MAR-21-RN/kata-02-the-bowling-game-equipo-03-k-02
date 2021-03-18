@@ -1,8 +1,9 @@
-import { pinsNumber, rollType, englishRollTypes } from "./globals.js";
+let { pinsNumber, rollType, englishRollTypes } = require("./globals.js");
 
-export default class Frame {
-  constructor(firstRolledPins, rollNumber) {
+module.export = class Frame {
+  constructor(firstRolledPins, rollNumber, previousScore) {
     this.rollNumber = rollNumber;
+    this.previousScore = previousScore;
     this.firstRolledPins = firstRolledPins;
     this.rollType = firstRolledPins == pinsNumber ? rollTypes.STRIKE : rollTypes.NORMAL;
 		this.bonusScore = 0;
@@ -26,6 +27,15 @@ export default class Frame {
 		this.rollType = firstRolledPins + secondRolledPins == pinsNumber ?
       rollTypes.SPARE :
       rollTypes.NORMAL;
+  }
+
+  getTotalScore() {
+    return (
+      this.firstRolledPins +
+      this.secondRolledPins +
+      this.bonusScore +
+      this.previousScore
+    );
   }
 
 	toString() {

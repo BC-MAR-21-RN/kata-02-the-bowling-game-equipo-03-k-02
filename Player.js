@@ -1,4 +1,4 @@
-export default class Player {
+module.exports = class Player {
   constructor(name) {
     this.name = name;
     this.frames = [];
