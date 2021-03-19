@@ -1,75 +1,110 @@
 let Roll = require("./Roll.js")
 let Player = require("./Player.js")
-let { totalRolls, pinsNumber } = require("./globals.js")
+let { totalRolls, pinsNumber, DELAY_TURN_MS } = require("./globals.js");
+
+
+let sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 module.exports = class MainPlay {
-    constructor(players) {
-        this.currentRoll = 1;
-        this.players = players;
+  constructor(players) {
+    this.currentRoll = 1;
+    this.players = players;
+  }
+
+  async start() {
+    for (
+      this.currentRoll = 1;
+      this.currentRoll <= totalRolls;
+      this.currentRoll++
+    ) {
+      await sleep(DELAY_TURN_MS);
+
+      this.makeTurn();
+      this.printTurn();
     }
 
-    start(){
-        for (let player of players) {
-            let updatedFrames = [];
+    this.makeLastTurn();
+    this.printTurn();
+  }
 
-            let frame = Roll.roll(this.currentRoll);
-            player.addRoll(frame);
-            updatedFrames.push(frame);
+  makeTurn() {
+    let i = this.currentRoll - 1;
+    for (let player of this.players) {
+      let frame = Roll.rollFrame(this.currentRoll);
+      player.addRoll(frame);
 
-            if (this.currentRoll < totalRolls) {
-                if (this.currentRoll > 1) {
-                    if (player.frames[this.currentRoll - 2].isSpare()) {
-                        player.frames[this.currentRoll - 2].bonusScore = frame.firstRolledPins;
-                    } else if (player.frames[this.currentRoll - 2].isStrike()) {
-                        player.frames[this.currentRoll - 2].bonusScore =
-                        frame.firstRolledPins + frame.secondRolledPins;
-                    }
+      if (i > 0) {
+        if (player.frames[i - 1].isStrike() || player.frames[i - 1].isSpare()) {
+          player.frames[i - 1].bonusScore += frame.firstRolledPins;
+        }
 
-                    player.frames[this.currentRoll - 1].previousScore =
-                        player.frames[this.currentRoll - 2].getTotalScore();
-                }
+        if (player.frames[i - 1].isStrike() && !frame.isStrike()) {
+          player.frames[i - 1].bonusScore += frame.secondRolledPins;
+        }
 
-                if (this.currentRoll > 2) {
-                    if (player.frames[this.currentRoll - 3].isStrike()) {
-                      player.frames[this.currentRoll - 3].bonusScore =
-                        frame.firstRolledPins + frame.secondRolledPins;
-                    }
-                }
-            } else if (frame.isSpare()) {
-                let spareFrame = Roll.rollOne();
-                player.frames[this.currentRoll - 1].bonusScore = spareFrame.firstRolledPins;
-                player.addRoll(spareFrame);
-                updatedFrames.push(spareFrame);
-            } else if (frame.isStrike()) {
-                let strikeFrame = Roll.rollOne(this.currentRoll + 1);
-                player.addRoll(strikeFrame);
-                updatedFrames.push(strikeFrame);
+        player.frames[i].previousScore = player.frames[i - 1].getTotalScore();
+      }
 
-                player.frames[this.currentRoll - 2].bonusScore +=
-                    strikeFrame.firstRolledPins;
-
-                if (strikeFrame.isStrike()) {
-                    let strikeFrame2 = Roll.rollOne(this.currentRoll + 2);
-                    player.frames[this.currentRoll - 3].bonusScore +=
-                      strikeFrame2.firstRolledPins;
-                    player.addRoll(strikeFrame2);
-                    updatedFrames.push(strikeFrame2);
-
-                } else {
-                    Roll.rollSecondShot(strikeFrame);
-                    player.frames[this.currentRoll - 2].bonusScore += strikeFrame.secondRolledPins;
-                }
-            }
-
-      this.printRoll(updatedFrames);
+      if (
+        i >= 2 &&
+        player.frames[i - 2].isStrike() &&
+        player.frames[i - 1].isStrike()
+      ) {
+        player.frames[i - 2].bonusScore += frame.firstRolledPins;
+        player.frames[i - 1].previousScore = player.frames[
+          i - 2
+        ].getTotalScore();
+        player.frames[i].previousScore = player.frames[i - 1].getTotalScore();
+      }
     }
+  }
 
-      this.currentRoll++;
-    };
+  makeLastTurn() {
+      let i = this.currentRoll - 2;
+      for (let player of this.players) {
+        let lastFrame = player.frames[i];
+        let frame11 = undefined;
 
-    printRoll(){
-        console.log("******")
+        if (lastFrame.isSpare() || lastFrame.isStrike()) {
+          frame11 = Roll.rollOne(this.currentRoll);
+          player.frames[i].bonusScore += frame11.firstRolledPins;
 
-        console.log("******")
+          if (
+            player.frames[i].isStrike() &&
+            player.frames[i - 1].isStrike()
+          ) {
+            player.frames[i - 1].bonusScore +=
+              frame11.firstRolledPins;
+          }
+
+          player.frames[i].previousScore = player.frames[
+            i - 1
+          ].getTotalScore();
+          frame11.previousScore = player.frames[i].getTotalScore();
+          player.addRoll(frame11);
+        }
+
+        if (lastFrame.isStrike()) {
+          if (frame11.isStrike()) {
+            let frame12 = Roll.rollOne(this.currentRoll + 1);
+            player.frames[i].bonusScore = frame12.firstRolledPins;
+            player.frames[i + 1].previousScore = player.frames[
+              i
+            ].getTotalScore();
+            player.addRoll(frame12);
+          } else {
+            frame11 = Roll.rollSecondShot(frame11);
+            player.frames[i].bonusScore += frame11.secondRolledPins;
+          }
+        }
+      }
+  }
+
+  printTurn() {
+    console.log(`############ ${this.currentRoll} ############`);
+    for (let player of this.players) {
+      console.log(`#### ${player.name} ####`);
+      player.printFrames();
     }
-}
+  }
+};

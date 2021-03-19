@@ -7,4 +7,10 @@ module.exports = class Player {
   addRoll(frame) {
     this.frames.push(frame)
   }
+
+  printFrames() {
+    for (let frame of this.frames) {
+      console.log(frame.toString())
+    }
+  }
 }

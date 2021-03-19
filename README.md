@@ -9,7 +9,7 @@
 - Integrar [CodeClimate](https://codeclimate.com/) CodeClimate a tu repositorio.
 
 ## Requerimientos funcionales
-![Bowling score](img/bowling.png) 
+![Bowling score](img/bowling.png)
 
 - The game consists of 10 frames as shown above. In each frame the player has two opportunities to knock down 10 pins. The score for the frame is the total number of pins knocked down, plus bonuses for strikes and spares.
 - A spare is when the player knocks down all 10 pins in two tries. The bonus for that frame is the number of pins knocked down by the next roll. So in frame 3 above, the score is 10 (the total number knocked down) plus a bonus of 5 (the number of pins knocked down on the next roll.)
@@ -46,10 +46,9 @@
 - [An intro to object-oriented programming in JavaScript: objects, prototypes, and classes](https://www.freecodecamp.org/news/an-intro-to-object-oriented-programming-in-javascript-objects-prototypes-and-classes-5d135e7361b1/)
 - [JavaScript — Principios SOLID](https://medium.com/@mauriciogc/javascript-principios-solid-e93a17e950bb)
 - [Understanding SOLID Principles in JavaScript](https://hackernoon.com/understanding-solid-principles-in-javascript-w1cx3yrv)
-- [The Absolute Beginner’s Guide to Test Driven Development, with a Practical Example](https://medium.com/@bethqiang/the-absolute-beginners-guide-to-test-driven-development-with-a-practical-example-c39e73a11631) 
+- [The Absolute Beginner’s Guide to Test Driven Development, with a Practical Example](https://medium.com/@bethqiang/the-absolute-beginners-guide-to-test-driven-development-with-a-practical-example-c39e73a11631)
 - [Learn Test Driven Development (TDD)](https://github.com/dwyl/learn-tdd)
 - [Fundamentals of TDD](https://thoughtbot.com/upcase/fundamentals-of-tdd)
 - [Getting Started](https://jestjs.io/docs/en/getting-started)
-- [Getting Started With Jest](https://www.valentinog.com/blog/jest/) 
+- [Getting Started With Jest](https://www.valentinog.com/blog/jest/)
 - [Testing JavaScript with Jest](https://flaviocopes.com/jest/)
-
