@@ -91,10 +91,11 @@ module.exports = class MainPlay {
             player.frames[i + 1].previousScore = player.frames[
               i
             ].getTotalScore();
+            frame12.previousScore = player.frames[i + 1].getTotalScore()
             player.addRoll(frame12);
           } else {
-            frame11 = Roll.rollSecondShot(frame11);
-            player.frames[i].bonusScore += frame11.secondRolledPins;
+            player.frames[i + 1] = Roll.rollSecondShot(player.frames[i + 1]);
+            player.frames[i].bonusScore += player.frames[i + 1].secondRolledPins;
           }
         }
       }

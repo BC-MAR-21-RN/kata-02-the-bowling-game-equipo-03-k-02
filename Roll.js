@@ -7,7 +7,7 @@ module.exports = class Roll {
   }
 
   static rollOne(rollNumber) {
-    return new Frame(this.random(7, pinsNumber), rollNumber);
+    return new Frame(this.random(9, pinsNumber), rollNumber);
   }
 
   static rollSecondShot(frame) {
